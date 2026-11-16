@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tablero de alerta temprana · Registro Académico</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;700&family=Special+Elite&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#4a382b;--paper:#f4ebd6;--ink:#2b1f17;--mute:#74604c;--line:#cdbb98;--tab:#d9bf85;--R:#a4231b;--A:#b9770e;--V:#4f6b3a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16100c;--paper:#2b221a;--ink:#f0e4c8;--mute:#b3a182;--line:#4b3d2e;--tab:#7a6232;--R:#ff7a6e;--A:#e2a63a;--V:#8fb26f}}
+:root[data-theme="dark"]{--bg:#16100c;--paper:#2b221a;--ink:#f0e4c8;--mute:#b3a182;--line:#4b3d2e;--tab:#7a6232;--R:#ff7a6e;--A:#e2a63a;--V:#8fb26f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "Source Serif 4",Georgia,serif}
+h1,h2,h3,.t{font-family:"Special Elite","Courier New",monospace;font-weight:400}
+.wrap{max-width:1120px;margin:0 auto;padding:22px 16px 40px}
+header{position:relative;padding:8px 0 18px;color:#f4ebd6}
+header h1{margin:0;font-size:34px;text-transform:uppercase;letter-spacing:1px;line-height:1.1}
+header p{margin:6px 0 0;max-width:62ch;color:#e3d4b0;font-size:15px}
+.stamp{position:absolute;right:0;top:6px;border:3px solid #ff7a6e;color:#ff7a6e;padding:2px 12px;font:400 18px "Special Elite",monospace;transform:rotate(-6deg);letter-spacing:2px}
+.ctl{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:end;background:var(--paper);border:1px solid var(--line);padding:14px 18px;margin-bottom:16px}
+.ctl label{display:block;font:700 13px "Archivo Narrow",Arial,sans-serif;color:var(--mute);letter-spacing:.5px}
+.ctl b{color:var(--ink)}
+select,button{font:inherit;font-size:15px;padding:5px 10px;background:var(--paper);color:var(--ink);border:1px solid var(--ink);cursor:pointer}
+input[type=range]{width:150px;accent-color:var(--R)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.card{background:var(--paper);border:1px solid var(--line);padding:16px 18px;box-shadow:0 6px 16px rgba(0,0,0,.35);background-image:repeating-linear-gradient(transparent 0 31px,rgba(120,90,50,.06) 31px 32px);min-width:0}
+.c12{grid-column:span 12}.c7{grid-column:span 7}.c6{grid-column:span 6}.c5{grid-column:span 5}.c4{grid-column:span 4}
+@media(max-width:860px){.c7,.c6,.c5,.c4{grid-column:span 12}header h1{font-size:26px}.stamp{position:static;display:inline-block;margin-top:8px}}
+h2{font-size:18px;margin:0 0 10px;text-transform:uppercase;border-bottom:2px solid var(--ink);padding-bottom:4px}
+.sub{font-size:13.5px;color:var(--mute);margin:0 0 8px}
+.lights{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.lights div{border-top:6px solid;padding:6px 2px}
+.lights b{display:block;font:400 42px/1 "Special Elite",monospace}
+.lights span{font-size:13px;color:var(--mute)}
+.R{border-color:var(--R);color:var(--R)}.A{border-color:var(--A);color:var(--A)}.V{border-color:var(--V);color:var(--V)}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;background:currentColor}
+svg{width:100%;height:auto;display:block}
+svg text{fill:var(--ink);font:12px "Archivo Narrow",Arial,sans-serif}
+table{border-collapse:collapse;width:100%;font:14.5px/1.35 "Archivo Narrow",Arial,sans-serif}
+th,td{padding:5px 7px;border-bottom:1px solid var(--line);text-align:right}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--mute)}
+.sc{overflow-x:auto}
+tr.on td{background:rgba(185,119,14,.18)}
+tbody.pick tr{cursor:pointer}tbody.pick tr:hover td{background:rgba(120,90,50,.12)}
+.bar{display:inline-block;height:8px;background:var(--R);vertical-align:middle;margin-right:5px}
+.big{font:400 30px "Special Elite",monospace}
+.ficha h3{margin:0;font-size:22px}
+.seal{display:inline-block;border:3px solid;padding:0 12px;font:400 20px "Special Elite",monospace;letter-spacing:2px;transform:rotate(-3deg);margin:4px 0 8px}
+.red{display:inline-block;width:150px;height:14px;background:var(--ink);vertical-align:middle}
+.g{display:grid;grid-template-columns:96px 1fr 30px;gap:2px 8px;align-items:center;font:13.5px "Archivo Narrow",Arial,sans-serif;margin:8px 0}
+.g i{display:block;height:9px}
+ul{margin:4px 0 8px;padding-left:20px;font-size:14.5px}
+.note{font-size:13px;color:var(--mute);border-left:3px solid var(--line);padding-left:10px;margin:10px 0 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="stamp">DATOS SIMULADOS</div>
+<h1>Tablero de alerta temprana</h1>
+<p>Registro Académico · Semáforo de riesgo sobre 120 estudiantes ficticios y 5 materias. Mueve los umbrales y mira cómo cambian los colores.</p>
+</header>
+
+<div class="ctl">
+<div><label for="sel">MATERIA (gráficos)</label><select id="sel"></select></div>
+<div><label for="rn">NOTA MÍNIMA ROJO: <b id="vn"></b></label><input id="rn" type="range" min="5" max="7" step=".1" value="6"></div>
+<div><label for="ra">ASISTENCIA ROJO: <b id="va"></b>%</label><input id="ra" type="range" min="60" max="90" step="1" value="75"></div>
+<div><label for="rz">Z-SCORE ROJO: −<b id="vz"></b></label><input id="rz" type="range" min="1" max="2.5" step=".1" value="1.5"></div>
+<button id="reset" type="button">Restablecer</button>
+</div>
+
+<div class="grid">
+<div class="card c5"><h2>Semáforo</h2><div class="lights" id="lights"></div><p class="note">Rojo: atención prioritaria. Amarillo: seguimiento. Verde: sin alerta. La alerta abre una conversación, no cierra un caso.</p></div>
+<div class="card c7"><h2>Distribución de notas</h2><p class="sub" id="hsub"></p><svg id="hist" viewBox="0 0 470 210" role="img" aria-label="Histograma de notas"></svg></div>
+
+<div class="card c7"><h2>Asistencia vs. nota</h2><p class="sub" id="ssub"></p><svg id="sc" viewBox="0 0 470 250" role="img" aria-label="Dispersión de asistencia contra nota"></svg></div>
+<div class="card c5 ficha" id="ficha"></div>
+
+<div class="card c7"><h2>Indicadores por materia</h2><div class="sc"><table id="stats"></table></div><p class="note">El coeficiente de variación (CV) indica qué tan representativa es la media: con CV bajo el promedio describe bien al grupo; con CV alto esconde diferencias.</p></div>
+<div class="card c5"><h2>¿Funciona la alerta?</h2><div id="val"></div></div>
+
+<div class="card c12"><h2>Los 12 estudiantes con mayor riesgo</h2><div class="sc"><table><thead><tr><th>ID</th><th>Promedio</th><th>Asistencia</th><th>Reprobadas</th><th>z-score</th><th>Semáforo</th></tr></thead><tbody id="list" class="pick"></tbody></table></div><p class="note">Toca una fila o un punto del gráfico para abrir la ficha del estudiante.</p></div>
+</div>
+</div>
+
+<script>
+(function(){
+/*DATA*/
+var S=["Estadística","Cálculo I","Contabilidad","Microeconomía","Macroeconomía"],D=[-.4,-.9,0,-.2,-.1];
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+var r=rng(427);
+function nz(){return(r()+r()+r()+r()-2)*1.73}
+function cl(x,a,b){return Math.max(a,Math.min(b,x))}
+function rd(x){return Math.round(x*10)/10}
+function mean(a){return a.reduce(function(x,y){return x+y},0)/a.length}
+function sd(a){var m=mean(a);return Math.sqrt(mean(a.map(function(x){return(x-m)*(x-m)})))}
+function med(a){var s=a.slice().sort(function(x,y){return x-y}),n=s.length;return n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2}
+function corr(x,y){var mx=mean(x),my=mean(y),n=0,dx=0,dy=0;for(var i=0;i<x.length;i++){n+=(x[i]-mx)*(y[i]-my);dx+=Math.pow(x[i]-mx,2);dy+=Math.pow(y[i]-my,2)}return n/Math.sqrt(dx*dy)}
+var P=[];
+for(var i=0;i<120;i++){
+ var a=8.3+nz()*.75,att=cl(91+(a-8.3)*7+nz()*6,42,100);
+ var g=D.map(function(d){return rd(cl(a+d+nz()*.9,1,10))});
+ var dr=(att-86)/18*.5+.1+nz()*.3;
+ P.push({id:"E-"+(370+i),att:Math.round(att),g:g,fin:g.map(function(x){return rd(cl(x+dr+nz()*.5,1,10))})});
+}
+var c=P[57];c.g=[6.3,3.8,4.1,4.0,6.3];c.att=58;c.fin=[5.8,3.5,4.0,3.9,6.0];
+P.forEach(function(p){p.avg=mean(p.g);p.f=p.g.filter(function(x){return x<6}).length;p.ff=p.fin.some(function(x){return x<6})});
+var AV=P.map(function(p){return p.avg}),M=mean(AV),SD=sd(AV);
+P.forEach(function(p){p.z=(p.avg-M)/SD});
+/*END*/
+var T={},N={R:"Rojo",A:"Amarillo",V:"Verde"},ACT={R:"Contacto de un tutor o coordinador en un plazo corto (una semana).",A:"Aviso al estudiante y revisión en la siguiente evaluación.",V:"Sin acción por ahora."};
+var sel=document.getElementById("sel"),cur="E-427";
+sel.innerHTML='<option value="-1">Promedio general</option>'+S.map(function(s,j){return'<option value="'+j+'">'+s+'</option>'}).join("");
+var rn=document.getElementById("rn"),ra=document.getElementById("ra"),rz=document.getElementById("rz");
+function f1(x){return x.toFixed(1)}
+function $(id){return document.getElementById(id)}
+function classify(p){
+ var R=[],A=[];
+ if(p.avg<T.n&&p.att<T.a)R.push("Promedio "+f1(p.avg)+" (menor a "+T.n+") con asistencia de "+p.att+"% (menor a "+T.a+"%)");
+ if(p.avg<T.n&&p.f>=2)R.push("Promedio bajo con "+p.f+" materias reprobadas");
+ if(p.z<-T.z)R.push("z-score de "+f1(p.z)+" (menor a −"+T.z+")");
+ if(p.avg<7)A.push("Promedio menor a 7");
+ if(p.att<85)A.push("Asistencia menor a 85%");
+ if(p.f>=1)A.push(p.f+" materia(s) reprobada(s)");
+ p.s=R.length?"R":A.length?"A":"V";p.why=R.length?R:A;
+}
+function draw(){
+ var j=+sel.value;
+ T={n:+rn.value,a:+ra.value,z:+rz.value};
+ $("vn").textContent=T.n;$("va").textContent=T.a;$("vz").textContent=T.z;
+ P.forEach(classify);
+ var cnt={R:0,A:0,V:0};P.forEach(function(p){cnt[p.s]++});
+ $("lights").innerHTML=["R","A","V"].map(function(k){return'<div class="'+k+'"><b>'+cnt[k]+'</b><span>'+N[k]+' · '+Math.round(cnt[k]/P.length*100)+'%</span></div>'}).join("");
+ var v=P.map(function(p){return j<0?p.avg:p.g[j]}),nm=j<0?"promedio":S[j];
+ // histograma
+ var bins=[0,0,0,0,0,0,0,0,0];v.forEach(function(x){bins[Math.min(8,Math.max(0,Math.floor(x)-1))]++});
+ var mx=Math.max.apply(null,bins),h="";
+ bins.forEach(function(n,k){var hh=n/mx*150,col=k+2<=6?"var(--R)":k+2<=7?"var(--A)":"var(--V)";
+  h+='<rect x="'+(30+k*48)+'" y="'+(170-hh)+'" width="42" height="'+hh+'" fill="'+col+'" opacity=".85"/><text x="'+(51+k*48)+'" y="'+(164-hh)+'" text-anchor="middle">'+n+'</text><text x="'+(51+k*48)+'" y="188" text-anchor="middle">'+(k+1)+'–'+(k+2)+'</text>'});
+ $("hist").innerHTML='<line x1="25" x2="465" y1="170" y2="170" stroke="var(--ink)"/><line x1="'+(30+5*48-3)+'" x2="'+(30+5*48-3)+'" y1="8" y2="170" stroke="var(--ink)" stroke-dasharray="4 3"/><text x="'+(30+5*48)+'" y="12">nota 6</text>'+h;
+ $("hsub").textContent="Estudiantes por rango de "+nm+". Media "+f1(mean(v))+", mediana "+f1(med(v))+", desviación "+sd(v).toFixed(2)+".";
+ // dispersión
+ var dots="";P.forEach(function(p,k){var y=j<0?p.avg:p.g[j],x=40+(p.att-40)/60*420,yy=220-(y-1)/9*205,on=p.id===cur;
+  dots+='<circle data-id="'+p.id+'" cx="'+x+'" cy="'+yy+'" r="'+(on?7:4.2)+'" fill="var(--'+p.s+')" fill-opacity="'+(on?1:.75)+'" stroke="'+(on?"var(--ink)":"none")+'" stroke-width="2.5"><title>'+p.id+' · '+f1(y)+' · '+p.att+'%</title></circle>'});
+ var ax="";[40,60,80,100].forEach(function(t){ax+='<text x="'+(40+(t-40)/60*420)+'" y="244" text-anchor="middle">'+t+'%</text>'});
+ $("sc").innerHTML='<line x1="40" x2="460" y1="220" y2="220" stroke="var(--ink)"/><line x1="40" x2="40" y1="10" y2="220" stroke="var(--ink)"/><line x1="40" x2="460" y1="'+(220-5/9*205)+'" y2="'+(220-5/9*205)+'" stroke="var(--ink)" stroke-dasharray="4 3"/>'+ax+'<text x="4" y="14">'+nm+'</text>'+dots;
+ $("ssub").textContent="Cada punto es un estudiante. Correlación entre asistencia y promedio: r = "+corr(P.map(function(p){return p.att}),AV).toFixed(2)+".";
+ // indicadores
+ var rows=S.map(function(s,k){return{n:s,v:P.map(function(p){return p.g[k]})}});rows.push({n:"Promedio general",v:AV});
+ $("stats").innerHTML='<tr><th>Materia</th><th>Media</th><th>Mediana</th><th>Desv.</th><th>CV</th><th>Representatividad de la media</th><th>Reprobación</th></tr>'+rows.map(function(o,k){
+  var m=mean(o.v),s=sd(o.v),cv=s/m*100,rp=o.v.filter(function(x){return x<6}).length/o.v.length*100;
+  return'<tr'+(k===j||(j<0&&k===5)?' class="on"':'')+'><td>'+o.n+'</td><td>'+f1(m)+'</td><td>'+f1(med(o.v))+'</td><td>'+s.toFixed(2)+'</td><td>'+Math.round(cv)+'%</td><td>'+(cv<12?"Alta":cv<20?"Media":"Baja")+'</td><td><i class="bar" style="width:'+Math.round(rp*1.2)+'px"></i>'+Math.round(rp)+'%</td></tr>'}).join("");
+ // validación
+ var ffs=P.filter(function(p){return p.ff}),fl=ffs.filter(function(p){return p.s!=="V"}).length,fr=ffs.filter(function(p){return p.s==="R"}).length;
+ var R=P.filter(function(p){return p.s==="R"}),Rf=R.filter(function(p){return p.ff}).length,Vv=P.filter(function(p){return p.s==="V"}),Vf=Vv.filter(function(p){return p.ff}).length;
+ function pc(a,b){return b?Math.round(a/b*100)+"%":"–"}
+ $("val").innerHTML='<p class="sub">Se compara la alerta de mitad de ciclo con lo que pasó al final (reprobar al menos una materia).</p>'+
+  '<p><span class="big">'+pc(fl,ffs.length)+'</span> de quienes reprobaron ya estaban en rojo o amarillo<br><span class="sub">('+pc(fr,ffs.length)+' ya estaban en rojo)</span></p>'+
+  '<p><span class="big">'+pc(Rf,R.length)+'</span> de los rojos efectivamente reprobó<br><span class="sub">El resto fueron falsas alarmas.</span></p>'+
+  '<p><span class="big">'+pc(Vf,Vv.length)+'</span> de los verdes reprobó<br><span class="sub">Casos que la herramienta no detectó.</span></p>'+
+  '<p class="note">Los datos son simulados y la relación entre asistencia y nota está incorporada, por lo que esto ilustra el método y no demuestra su eficacia real.</p>';
+ // lista
+ $("list").innerHTML=P.slice().sort(function(a,b){return a.z-b.z}).slice(0,12).map(function(p){
+  return'<tr data-id="'+p.id+'"'+(p.id===cur?' class="on"':'')+'><td>'+p.id+'</td><td>'+f1(p.avg)+'</td><td>'+p.att+'%</td><td>'+p.f+'</td><td>'+f1(p.z)+'</td><td class="'+p.s+'" style="border:0"><span class="dot"></span>'+N[p.s]+'</td></tr>'}).join("");
+ // ficha
+ var p=P.filter(function(q){return q.id===cur})[0];
+ $("ficha").innerHTML='<h2>Ficha del estudiante</h2><h3>'+p.id+'</h3><p style="margin:2px 0">Nombre: <span class="red"></span></p><div class="seal '+p.s+'">'+N[p.s].toUpperCase()+'</div>'+
+  '<p style="margin:0">Promedio <b>'+f1(p.avg)+'</b> (cohorte '+f1(M)+') · Asistencia <b>'+p.att+'%</b> · z-score <b>'+f1(p.z)+'</b></p>'+
+  '<div class="g">'+S.map(function(s,k){return'<span>'+s+'</span><span><i style="width:'+p.g[k]*10+'%;background:var(--'+(p.g[k]<6?"R":"V")+')"></i></span><b>'+f1(p.g[k])+'</b>'}).join("")+'</div>'+
+  '<b>Reglas activadas</b><ul>'+(p.why.length?p.why.map(function(w){return'<li>'+w+'</li>'}).join(""):'<li>Ninguna</li>')+'</ul><b>Acción sugerida</b><p style="margin:2px 0 0">'+ACT[p.s]+'</p>';
+}
+function pick(e){var t=e.target.closest("[data-id]");if(t){cur=t.getAttribute("data-id");draw();if(innerWidth<860)$("ficha").scrollIntoView({behavior:"smooth",block:"start"})}}
+$("sc").addEventListener("click",pick);$("list").addEventListener("click",pick);
+[sel,rn,ra,rz].forEach(function(el){el.addEventListener("input",draw)});
+$("reset").addEventListener("click",function(){rn.value=6;ra.value=75;rz.value=1.5;sel.value=-1;cur="E-427";draw()});
+draw();
+})();
+</script>
+</body>
+</html>
